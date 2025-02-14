@@ -1,13 +1,31 @@
 "use client";
-const { useState } = React;
+const { useState, useEffect } = React;
 
 function Page() {
   const [noCount, setNoCount] = useState(0);
   const [yesPressed, setYesPressed] = useState(false);
-  const yesButtonSize = noCount * 20 + 16;
+  const [noPosition, setNoPosition] = useState({ top: "50%", left: "50%" });
+  const [themeColor, setThemeColor] = useState("#ffc0cb");
 
   const handleNoClick = () => {
-    setNoCount(noCount + 1);
+    setNoCount((prevCount) => prevCount + 1);
+    if (noCount < 2) {
+      moveButtonRandomly();
+    } else {
+      attachNoButtonToCursor();
+    }
+  };
+
+  const moveButtonRandomly = () => {
+    const randomTop = Math.random() * 80 + 10;
+    const randomLeft = Math.random() * 80 + 10;
+    setNoPosition({ top: `${randomTop}%`, left: `${randomLeft}%` });
+  };
+
+  const attachNoButtonToCursor = () => {
+    document.body.addEventListener("mousemove", (event) => {
+      setNoPosition({ top: `${event.clientY}px`, left: `${event.clientX}px` });
+    });
   };
 
   const getNoButtonText = () => {
@@ -17,24 +35,13 @@ function Page() {
       "Really sure?",
       "Think again!",
       "Last chance!",
-      "Surely not?",
-      "You might regret this!",
-      "Give it another thought!",
-      "Are you absolutely certain?",
-      "This could be a mistake!",
-      "Have a heart!",
-      "Don't be so cold!",
-      "Change of heart?",
-      "Wouldn't you reconsider?",
-      "Is that your final answer?",
       "You're breaking my heart ;(",
     ];
-
     return phrases[Math.min(noCount, phrases.length - 1)];
   };
 
   return (
-    React.createElement("div", { className: "flex flex-col items-center justify-center h-screen -mt-16" },
+    React.createElement("div", { className: "flex flex-col items-center justify-center h-screen", style: { backgroundColor: themeColor } },
       yesPressed ? (
         React.createElement(React.Fragment, null,
           React.createElement("img", { src: "https://media.tenor.com/gUiu1zyxfzYAAAAi/bear-kiss-bear-kisses.gif" }),
@@ -47,13 +54,25 @@ function Page() {
           React.createElement("div", null,
             React.createElement("button", {
               className: `bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-4`,
-              style: { fontSize: yesButtonSize },
               onClick: () => setYesPressed(true)
             }, "Yes"),
             React.createElement("button", {
               onClick: handleNoClick,
-              className: " bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-            }, noCount === 0 ? "No" : getNoButtonText())
+              className: "bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded",
+              style: { position: "absolute", top: noPosition.top, left: noPosition.left }
+            }, getNoButtonText())
+          ),
+          React.createElement("div", { className: "mt-6" },
+            React.createElement("label", { className: "mr-2 font-bold" }, "Choose Background Color: "),
+            React.createElement("select", {
+              onChange: (e) => setThemeColor(e.target.value),
+              className: "border p-2 rounded"
+            },
+              React.createElement("option", { value: "#ffc0cb" }, "Pink"),
+              React.createElement("option", { value: "#ffe4e1" }, "Light Pink"),
+              React.createElement("option", { value: "#ff69b4" }, "Hot Pink"),
+              React.createElement("option", { value: "#ffb6c1" }, "Light Coral")
+            )
           )
         )
       )
