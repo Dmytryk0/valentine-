@@ -39,7 +39,7 @@
       margin-top: 20px;
     }
 
-    .yes-button, .no-button {
+    .yes-button {
       font-weight: bold;
       font-size: 16px;
       padding: 10px 20px;
@@ -47,33 +47,12 @@
       border-radius: 5px;
       cursor: pointer;
       transition: background-color 0.3s;
-    }
-
-    .yes-button {
       background-color: #4CAF50;
       color: white;
     }
 
     .yes-button:hover {
       background-color: #45a049;
-    }
-
-    .no-button {
-      background-color: #f44336;
-      color: white;
-      position: relative;
-    }
-
-    .no-button:hover {
-      background-color: #d32f2f;
-    }
-
-    .farewell-message {
-      font-family: 'Cursive', sans-serif;
-      font-size: 3rem;
-      color: #8B0000;
-      text-align: center;
-      margin-top: 50px;
     }
   </style>
 </head>
@@ -85,61 +64,16 @@
 
   <div class="buttons">
     <button class="yes-button" onclick="showSuccessMessage()">Yes</button>
-    <button class="no-button" onclick="handleNoClick()" id="noButton">No</button>
   </div>
 </div>
 
 <script>
-  let noCount = 0;
-  const noButton = document.getElementById('noButton');
   const mainContainer = document.getElementById('mainContainer');
-
-  function handleNoClick() {
-    noCount++;
-    if (noCount < 3) {
-      moveButtonRandomly();
-    } else {
-      attachButtonToCursor();
-      removeYesButton();
-    }
-  }
-
-  function moveButtonRandomly() {
-    const maxX = window.innerWidth - noButton.offsetWidth;
-    const maxY = window.innerHeight - noButton.offsetHeight;
-
-    const randomX = Math.random() * maxX;
-    const randomY = Math.random() * maxY;
-
-    noButton.style.position = 'absolute';
-    noButton.style.left = `${randomX}px`;
-    noButton.style.top = `${randomY}px`;
-  }
-
-  function attachButtonToCursor() {
-    document.body.addEventListener('mousemove', (event) => {
-      noButton.style.left = `${event.clientX}px`;
-      noButton.style.top = `${event.clientY}px`;
-    });
-
-    noButton.onclick = showFarewellMessage;
-  }
-
-  function removeYesButton() {
-    const yesButton = document.querySelector('.yes-button');
-    if (yesButton) yesButton.remove();
-  }
-
-  function showFarewellMessage() {
-    mainContainer.innerHTML = `
-      <div class="farewell-message">Thank you) Goodbye!</div>
-    `;
-  }
 
   function showSuccessMessage() {
     mainContainer.innerHTML = `
       <img class="image" src="https://media.tenor.com/gUiu1zyxfzYAAAAi/bear-kiss-bear-kisses.gif" alt="Bear Kiss">
-      <div class="text-4xl font-bold my-4">OK WOW!!!</div>
+      <div style="font-size: 2.25rem; font-weight: bold; margin-top: 1rem;">OK WOW!!!</div>
     `;
   }
 </script>
